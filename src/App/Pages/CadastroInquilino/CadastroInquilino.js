@@ -50,7 +50,7 @@ export default class CadastroInquilino extends Component {
   componentWillMount() {
     axios.get(server + 'api/v1/service/residencial')
       .then(x => {
-        const data = x.data.sort((a, b) => (a.nome > b.nome) ? 1 : ((b.nome > a.nome) ? -1 : 0))
+        const data = x.data.sort((a, b) => (a._id > b._id) ? 1 : ((b._id > a._id) ? -1 : 0))
         this.setState({ listaResidenciais: data })
       })
       .catch(error => {
@@ -82,8 +82,8 @@ export default class CadastroInquilino extends Component {
     axios.get(server + 'api/v1/service/apartamento/' + residencialIp)
       .then(x => {
         console.log(x.data);
-
-        this.setState({ listaApartamento: x.data })
+        const data = x.data.sort((a, b) => (a._id > b._id) ? 1 : ((b._id > a._id) ? -1 : 0))
+        this.setState({ listaApartamento: data })
       })
       .catch(error => {
         return notification['error']({
@@ -134,7 +134,7 @@ export default class CadastroInquilino extends Component {
     }
     const exist = await axios.get(server + 'api/v1/service/inquilino/' + inquilino.residencialIp)
     console.log(exist.data)
-    if (exist.data.inquilino.length > 0)
+    if (exist.data)
       return notification['warning']({
         message: 'Atenção',
         description: 'Já existe um inquilino para o apartamento ' + inquilino.residencialIp + '.',
@@ -142,7 +142,7 @@ export default class CadastroInquilino extends Component {
         btn:
           <Button variant="contained" type="primary" size="small" onClick={() => {
             notification.close('update')
-            axios.put(server + 'api/v1/service/inquilino/' + exist.data.inquilino[0]._id, inquilino)
+            axios.put(server + 'api/v1/service/inquilino/' + exist.data._id, inquilino)
               .then(x => {
                 if (x.data)
                   return notification['success']({
@@ -368,7 +368,7 @@ export default class CadastroInquilino extends Component {
                   </MenuItem>
                   {
                     [...Array(12).keys()].map((mes) => {
-                      return (<MenuItem key={mes} value={mes + 1}>{mes > 8 ? mes + 1 : "0" + (mes + 1)}</MenuItem>)
+                      return (<MenuItem key={mes} value={mes > 8 ? mes + 1 : "0" + (mes + 1)}>{mes > 8 ? mes + 1 : "0" + (mes + 1)}</MenuItem>)
                     })
                   }
                 </TextField>
@@ -515,10 +515,10 @@ export default class CadastroInquilino extends Component {
 }
 
 
-const actions = [
-  { icon: <Icon>file_copy</Icon>, name: 'Copy' },
-  { icon: <Icon>save</Icon>, name: 'Save' },
-  { icon: <Icon>print</Icon>, name: 'Print' },
-  { icon: <Icon>share</Icon>, name: 'Share' },
-  { icon: <Icon>delete</Icon>, name: 'Delete' },
-];
+// const actions = [
+//   { icon: <Icon>file_copy</Icon>, name: 'Copy' },
+//   { icon: <Icon>save</Icon>, name: 'Save' },
+//   { icon: <Icon>print</Icon>, name: 'Print' },
+//   { icon: <Icon>share</Icon>, name: 'Share' },
+//   { icon: <Icon>delete</Icon>, name: 'Delete' },
+// ];
