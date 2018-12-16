@@ -1,2 +1,2 @@
-const server = "http://10.0.0.102:3001/"
+const server = "http://localhost:3001/"
 export default server;
